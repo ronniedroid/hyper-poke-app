@@ -1,0 +1,24 @@
+{
+  "name": "hyper-poke-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hyperapp/html": "^1.2.3",
+    "@hyperapp/http": "0.0.2",
+    "apexcharts": "^3.23.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "bulma": "^0.9.1",
+    "hyperapp": "^2.0.8"
+  },
+  "devDependencies": {
+    "sass": "^1.32.2"
+  }
+}
