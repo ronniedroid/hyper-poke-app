@@ -12,11 +12,11 @@
   "dependencies": {
     "@hyperapp/html": "^1.2.3",
     "@hyperapp/http": "0.0.2",
-    "apexcharts": "^3.23.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "bulma": "^0.9.1",
-    "hyperapp": "^2.0.8"
+    "hyperapp": "^2.0.8",
+    "parcel-bundler": "^1.12.4"
   },
   "devDependencies": {
     "sass": "^1.32.2"
