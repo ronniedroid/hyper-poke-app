@@ -1,6 +1,22 @@
 import { app, text } from "hyperapp";
 import { button, div, input, p, a, figure, img } from "@hyperapp/html";
 import { request } from "@hyperapp/http";
+import { pushUrl, onUrlChange } from "./navigation";
+
+const BASE_URL =
+  location.protocol +
+  "//" +
+  location.hostname +
+  (location.port ? ":" + location.port : "");
+
+const pokemonFromUrl = (url) => {
+  let name = url.replace(BASE_URL, "");
+  if (!name || name === "/") return null;
+  return name.substr(1);
+};
+
+const goToPokemonUrl = (name) => pushUrl([BASE_URL + "/" + name]);
+const goToMenu = () => pushUrl([BASE_URL]);
 
 const columnsView = (...elm) =>
   div(
@@ -30,13 +46,15 @@ const updatePokemon = (word, poc) => {
   return poc.filter((item) => item.name.includes(word));
 };
 
-const GetPokemon = (state, event) => [
-  {
-    ...state,
-    word: "",
-  },
+const ClickPokemon = (state, event) => [
+  { ...state, word: "" },
+  goToPokemonUrl(event.target.textContent),
+];
+
+const FetchPokemon = (state, name) => [
+  { ...state, fetching: true },
   request({
-    url: `https://pokeapi.co/api/v2/pokemon/${event.target.textContent}`,
+    url: `https://pokeapi.co/api/v2/pokemon/${name}`,
     expect: "json",
     action: GotPokemon,
   }),
@@ -49,10 +67,16 @@ const GotPokemon = (state, data) => ({
   viewing: true,
 });
 
-const SetViewing = (state) => ({
-  ...state,
-  viewing: false,
-});
+const ShowMenu = (state) => [state, goToMenu()];
+
+const HandleUrl = (state, url) => {
+  const name = pokemonFromUrl(url);
+  if (name) return [FetchPokemon, name];
+  return {
+    ...state,
+    viewing: false,
+  };
+};
 
 app({
   init: [
@@ -69,6 +93,7 @@ app({
       action: GotPokemons,
     }),
   ],
+  subscriptions: (state) => [state.pokemons.length && onUrlChange(HandleUrl)],
   view: ({ pokemons, pokemon, word, viewing }) =>
     div(
       {
@@ -81,7 +106,7 @@ app({
             {
               class:
                 "column is-one-thir is-size-3 has-text-centered has-text-primary mb-6",
-              onclick: SetViewing,
+              onclick: ShowMenu,
             },
             [text("Pockemon Picker")]
           )
@@ -140,7 +165,7 @@ app({
             button(
               {
                 class: "button is-text column",
-                onclick: GetPokemon,
+                onclick: ClickPokemon,
               },
               [text(item.name)]
             )
